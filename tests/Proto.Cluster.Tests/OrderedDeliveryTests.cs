@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClusterTest.Messages;
 using FluentAssertions;
-using Proto.Utils;
 using Xunit;
 
 namespace Proto.Cluster.Tests;

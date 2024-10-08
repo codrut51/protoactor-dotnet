@@ -5,13 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Proto.Context;
-using Proto.Extensions;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 // ReSharper disable once CheckNamespace

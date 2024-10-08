@@ -4,8 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Immutable;
-
 namespace Proto.Cluster.Seed;
 
 public record SeedNodeClusterProviderOptions(ISeedNodeDiscovery Discovery);

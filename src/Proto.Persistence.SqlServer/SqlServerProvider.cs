@@ -82,7 +82,7 @@ public class SqlServerProvider : IProvider
             CreateParameter("SnapshotIndex", BigInt, inclusiveToIndex)
         );
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         await using var connection = new SqlConnection(_connectionString);
 
@@ -107,7 +107,7 @@ public class SqlServerProvider : IProvider
         {
             lastIndex = (long)eventReader["EventIndex"];
 
-            callback(JsonConvert.DeserializeObject<object>(eventReader["EventData"].ToString(), AutoTypeSettings));
+            callback(JsonConvert.DeserializeObject<object>(eventReader["EventData"].ToString(), AutoTypeSettings), lastIndex);
         }
 
         return lastIndex;

@@ -18,7 +18,7 @@ public class RavenDBProvider : IProvider
         SetupIndexes();
     }
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         using var session = _store.OpenAsyncSession();
 
@@ -30,7 +30,7 @@ public class RavenDBProvider : IProvider
 
         foreach (var @event in events)
         {
-            callback(@event.Data);
+            callback(@event.Data, @event.Index);
         }
 
         return events.LastOrDefault()?.Index ?? -1;

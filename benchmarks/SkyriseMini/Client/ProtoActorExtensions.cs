@@ -1,6 +1,3 @@
-using System.IO.Compression;
-using Grpc.Net.Client;
-using Grpc.Net.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

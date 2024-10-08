@@ -37,7 +37,7 @@ public class DynamoDBProvider : IProvider, IDisposable
         _snapshotsTable = Table.LoadTable(dynamoDBClient, options.SnapshotsTableName, DynamoDBEntryConversion.V2);
     }
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         var config = new QueryOperationConfig { ConsistentRead = true };
         config.Filter.AddCondition(_options.EventsTableHashKey, QueryOperator.Equal, actorName);
@@ -52,8 +52,9 @@ public class DynamoDBProvider : IProvider, IDisposable
 
             foreach (var doc in results)
             {
-                callback(GetData(doc));
-                lastIndex++;
+                var (@event, index) = GetData(doc);
+                callback(@event, index);
+                lastIndex=index;
             }
 
             if (query.IsDone)
@@ -64,14 +65,14 @@ public class DynamoDBProvider : IProvider, IDisposable
 
         return lastIndex;
 
-        object GetData(Document doc)
+        (object @event, long index) GetData(Document doc)
         {
             var dataTypeE = doc.GetValueOrThrow(_options.EventsTableDataTypeKey);
             var dataE = doc.GetValueOrThrow(_options.EventsTableDataKey);
 
             var dataType = Type.GetType(dataTypeE.AsString());
 
-            return _dynamoDBContext.FromDocumentDynamic(dataE.AsDocument(), dataType);
+            return (_dynamoDBContext.FromDocumentDynamic(dataE.AsDocument(), dataType), dataE.AsLong());
         }
     }
 

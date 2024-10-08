@@ -14,7 +14,7 @@ public class MartenProvider : IProvider
         _store = store;
     }
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         var session = _store.IdentitySession();
         await using var _ = session.ConfigureAwait(false);
@@ -27,7 +27,7 @@ public class MartenProvider : IProvider
 
         foreach (var @event in events)
         {
-            callback(@event.Data);
+            callback(@event.Data, @event.Index);
         }
 
         return events.LastOrDefault()?.Index ?? -1;

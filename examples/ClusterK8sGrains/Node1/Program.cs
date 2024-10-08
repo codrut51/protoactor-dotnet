@@ -18,8 +18,6 @@ using Proto.Remote.GrpcNet;
 using static Proto.CancellationTokens;
 using ProtosReflection = ClusterHelloWorld.Messages.ProtosReflection;
 using System.Runtime.Loader;
-using Microsoft.Extensions.Configuration;
-using Extensions = Proto.Remote.GrpcNet.Extensions;
 
 // Hook SIGTERM to a cancel token to know when k8s is shutting us down
 // hostBuilder should be used in production

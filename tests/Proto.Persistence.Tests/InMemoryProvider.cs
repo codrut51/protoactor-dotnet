@@ -31,7 +31,7 @@ public class InMemoryProvider : IProvider
         return Task.FromResult((snapshot.Value, snapshot.Key));
     }
 
-    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         var lastIndex = 0L;
 
@@ -40,7 +40,7 @@ public class InMemoryProvider : IProvider
             foreach (var e in events.Where(e => e.Key >= indexStart && e.Key <= indexEnd))
             {
                 lastIndex = e.Key;
-                callback(e.Value);
+                callback(e.Value, e.Key);
             }
         }
 

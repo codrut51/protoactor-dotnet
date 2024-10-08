@@ -21,13 +21,13 @@ public class InMemoryProvider : IProvider
     public Task<(object Snapshot, long Index)> GetSnapshotAsync(string actorName) =>
         Task.FromResult(((object)default(Snapshot), 0L));
 
-    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         if (Events.TryGetValue(actorName, out var events))
         {
             foreach (var e in events.Where(e => e.Key >= indexStart && e.Key <= indexEnd))
             {
-                callback(e.Value);
+                callback(e.Value, e.Key);
             }
         }
 

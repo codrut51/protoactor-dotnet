@@ -4,9 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Proto.Diagnostics;
 
 namespace Proto.Extensions;

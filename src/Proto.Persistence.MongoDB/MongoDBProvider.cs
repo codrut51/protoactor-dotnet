@@ -25,7 +25,7 @@ public class MongoDBProvider : IProvider
 
     private IMongoCollection<Snapshot> SnapshotCollection => _mongoDB.GetCollection<Snapshot>("snapshots");
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         var sort = Builders<Event>.Sort.Ascending("EventIndex");
 
@@ -36,7 +36,7 @@ public class MongoDBProvider : IProvider
 
         foreach (var @event in events)
         {
-            callback(@event.Data);
+            callback(@event.Data, @event.EventIndex);
         }
 
         return events.Any() ? events.Last().EventIndex : -1;

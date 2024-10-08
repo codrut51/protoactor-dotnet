@@ -55,7 +55,7 @@ public interface IEventStore
     /// <param name="indexEnd">Index of the last event to get (inclusive)</param>
     /// <param name="callback">A callback which should be called for each read event, in the order the events are stored</param>
     /// <returns>Index of the last read event or -1 if none</returns>
-    Task<long> GetEventsAsync(string actorId, long indexStart, long indexEnd, Action<object> callback);
+    Task<long> GetEventsAsync(string actorId, long indexStart, long indexEnd, Action<object, long> callback);
 
     /// <summary>
     ///     Writes an event to event stream of particular actor

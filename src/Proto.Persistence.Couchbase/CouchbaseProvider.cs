@@ -21,7 +21,7 @@ public class CouchbaseProvider : IProvider
         _bucket = bucket;
     }
 
-    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         var query = GenerateGetEventsQuery(actorName, indexStart, indexEnd);
 
@@ -105,7 +105,7 @@ public class CouchbaseProvider : IProvider
         $"AND b.eventIndex <= {indexEnd} " +
         "ORDER BY b.eventIndex ASC";
 
-    private async Task<long> ExecuteGetEventsQueryAsync(string query, Action<object> callback)
+    private async Task<long> ExecuteGetEventsQueryAsync(string query, Action<object, long> callback)
     {
         var req = QueryRequest.Create(query);
 
@@ -119,7 +119,7 @@ public class CouchbaseProvider : IProvider
 
         foreach (var @event in events)
         {
-            callback(@event.Data);
+            callback(@event.Data, @event.EventIndex);
         }
 
         return events.LastOrDefault()?.EventIndex ?? -1;

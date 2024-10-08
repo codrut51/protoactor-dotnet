@@ -230,10 +230,10 @@ public class Persistence
             _actorId,
             fromEventIndex,
             long.MaxValue,
-            @event =>
+            (@event, index) =>
             {
-                Index++;
-                _applyEvent?.Invoke(new RecoverEvent(@event, Index));
+                Index = index;
+                _applyEvent?.Invoke(new RecoverEvent(@event, index));
             }
         ).ConfigureAwait(false);
     }
@@ -260,10 +260,10 @@ public class Persistence
             _actorId,
             fromIndex,
             toIndex,
-            @event =>
+            (@event, index) =>
             {
-                _applyEvent?.Invoke(new ReplayEvent(@event, Index));
-                Index++;
+                _applyEvent?.Invoke(new ReplayEvent(@event, index));
+                Index=index;
             }
         ).ConfigureAwait(false);
     }
@@ -339,7 +339,7 @@ public class Persistence
     private class NoEventStore : IEventStore
     {
         public Task<long>
-            GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback) =>
+            GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback) =>
             Task.FromResult(-1L);
 
         public Task<long> PersistEventAsync(string actorName, long index, object @event) => Task.FromResult(0L);

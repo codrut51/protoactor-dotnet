@@ -1,7 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Marten;
-using Proto.Persistence.Marten;
 using Proto.Persistence.SnapshotStrategies;
 using Xunit;
 

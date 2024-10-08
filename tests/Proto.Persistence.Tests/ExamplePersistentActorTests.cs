@@ -77,7 +77,7 @@ public class ExamplePersistentActorTests: IClassFixture<ContainersFixture>
         context.Send(pid, new Multiply { Amount = 2 });
 
         await providerState
-            .GetEventsAsync(actorId, 0, long.MaxValue, o =>
+            .GetEventsAsync(actorId, 0, long.MaxValue, (o, i) =>
                 {
                     Assert.IsType<Multiplied>(o);
                     Assert.Equal(2, ((Multiplied)o).Amount);
@@ -120,7 +120,7 @@ public class ExamplePersistentActorTests: IClassFixture<ContainersFixture>
         context.Send(pid, new Multiply { Amount = 10 });
         await providerState.DeleteEventsAsync(actorId, 1);
         var events = new List<object>();
-        await providerState.GetEventsAsync(actorId, 0, long.MaxValue, v => events.Add(v));
+        await providerState.GetEventsAsync(actorId, 0, long.MaxValue, (v, i) => events.Add(v));
 
         Assert.Empty(events);
     }
@@ -375,7 +375,7 @@ public class ExamplePersistentActorTests: IClassFixture<ContainersFixture>
         context.Send(pid, new Multiply { Amount = 4 });
         context.Send(pid, new Multiply { Amount = 8 });
         var messages = new List<object>();
-        await providerState.GetEventsAsync(actorId, 1, 2, msg => messages.Add(msg));
+        await providerState.GetEventsAsync(actorId, 1, 2, (msg, index) => messages.Add(msg));
         Assert.Equal(2, messages.Count);
         Assert.Equal(2, ((Multiplied)messages[0]).Amount);
         Assert.Equal(4, ((Multiplied)messages[1]).Amount);
@@ -403,11 +403,9 @@ public class ExamplePersistentActorTests: IClassFixture<ContainersFixture>
 
         context.Send(pid, new Multiply { Amount = 2 });
         var eventStoreMessages = new List<object>();
-        var snapshotStoreMessages = new List<object>();
-        await eventStore.GetEventsAsync(actorId, 0, 1, msg => eventStoreMessages.Add(msg));
+        await eventStore.GetEventsAsync(actorId, 0, 1, (msg, index) => eventStoreMessages.Add(msg));
         Assert.Single(eventStoreMessages);
-        await snapshotStore.GetEventsAsync(actorId, 0, 1, msg => snapshotStoreMessages.Add(msg));
-        Assert.Empty(snapshotStoreMessages);
+        Assert.Null((await snapshotStore.GetSnapshotAsync(actorId)).Snapshot);
     }
 
     private (PID pid, Props props, string actorId, IProvider provider) CreateTestActor(IRootContext context,IProvider provider)

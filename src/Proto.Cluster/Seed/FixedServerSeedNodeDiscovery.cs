@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Proto.Cluster.SingleNode;
 
 namespace Proto.Cluster.Seed;
 

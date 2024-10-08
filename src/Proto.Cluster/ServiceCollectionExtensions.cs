@@ -3,10 +3,8 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Proto.Cluster;
 using Proto.Cluster.Identity;
 using Proto.Cluster.Partition;
-using Proto.Cluster.Seed;
 using Proto.DependencyInjection;
 using Proto.Remote.GrpcNet;
 

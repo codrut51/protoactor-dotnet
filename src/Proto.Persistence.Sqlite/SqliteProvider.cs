@@ -72,7 +72,7 @@ public class SqliteProvider : IProvider
         await deleteCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
     }
 
-    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object> callback)
+    public async Task<long> GetEventsAsync(string actorName, long indexStart, long indexEnd, Action<object, long> callback)
     {
         using var connection = new SqliteConnection(ConnectionString);
 
@@ -92,9 +92,10 @@ public class SqliteProvider : IProvider
 
         while (await reader.ReadAsync().ConfigureAwait(false))
         {
-            indexes.Add(Convert.ToInt64(reader["EventIndex"]));
+            var index = Convert.ToInt64(reader["EventIndex"]);
+            indexes.Add(index);
 
-            callback(JsonConvert.DeserializeObject<object>(reader["EventData"].ToString(), AutoTypeSettings));
+            callback(JsonConvert.DeserializeObject<object>(reader["EventData"].ToString(), AutoTypeSettings), index);
         }
 
         return indexes.Any() ? indexes.LastOrDefault() : -1;

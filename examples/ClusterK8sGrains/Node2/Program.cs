@@ -9,7 +9,6 @@ using System.Runtime.Loader;
 using System.Threading.Tasks;
 using System.Threading;
 using ClusterHelloWorld.Messages;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Proto;
 using Proto.Cluster;
